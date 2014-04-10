@@ -1,0 +1,50 @@
+/* This stylesheet is used to style the public-facing components of the plugin. */
+.sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+.sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+.sortable li span { position: absolute; margin-left: -1.3em; }
+
+ul.estachap {
+list-style-type: none !important;
+list-style: none !important;
+}
+
+.estachap-event{
+cursor:pointer;
+margin: 0px 5px 0px 5px;
+}
+
+.toggle {
+appearance:none;
+cursor:pointer;
+	
+}
+
+.estachap-label {
+	position: relative;
+	background: #A7A8AC; /**From sonymobile.com '*/
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 8px 10px;
+	color: #000;
+	line-height:24px;
+	font-size:12px;
+	text-align:left;
+	-webkit-font-smoothing: antialiased;
+	margin: 5px 5px;
+	transition:all 500ms ease;
+}
+
+.estachap-container {
+	transition: margin 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+	padding: 1em 1em;
+}
+
+span.ddButtonLeft  {
+	background: url("../images/sprite-icons.png") no-repeat scroll -323px -57px transparent;
+	cursor: pointer;
+	float:left;
+	height: 20px;
+	padding: 0!important;
+	width: 24px!important;
+}
