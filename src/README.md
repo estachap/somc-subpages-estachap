@@ -11,7 +11,7 @@ It fetchs and displays all subpages' titles, truncated after 20 characters and (
 Usage
 =====================
 
-Upload the zip file to the WP site and activate.
+Upload the zip file to the WP site and activate (/dist/somc-subpages-estachap.zip).
 
 You can add a shortcode [somc_subpages] to any page where you want to display a list of sub-pages of itself.
 A second way to use is by adding the Subpages widget to a sidebar or another widget area that you can choose under “Appearance > Widget” menu. 
