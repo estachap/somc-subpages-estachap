@@ -282,8 +282,8 @@ class SomcSubpagesEstachap {
 	 */
 	public function enqueue_styles() {
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
-		wp_enqueue_style('jquery-ui-lightness-styles', get_template_directory_uri() . '/js/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css', array());
-		//wp_enqueue_style('jquery-ui-smoothness-styles', '//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css', array());
+		//wp_enqueue_style('jquery-ui-lightness-styles', get_template_directory_uri() . '/js/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css', array());
+		wp_enqueue_style('jquery-ui-smoothness-styles', '//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css', array());
 	}
 
 	/**
@@ -293,8 +293,8 @@ class SomcSubpagesEstachap {
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
-		wp_enqueue_script('jquery-ui', get_template_directory_uri() . '/js/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js', array(), '1.10.4');
-		//wp_enqueue_script('jquery-ui', '//code.jquery.com/ui/1.10.4/jquery-ui.js', array(), '1.10.4');
+		//wp_enqueue_script('jquery-ui', get_template_directory_uri() . '/js/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js', array(), '1.10.4');
+		wp_enqueue_script('jquery-ui', '//code.jquery.com/ui/1.10.4/jquery-ui.js', array(), '1.10.4');
 	}
 
 	/**
