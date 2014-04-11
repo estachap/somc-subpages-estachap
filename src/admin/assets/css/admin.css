@@ -1,1 +1,16 @@
 /* This stylesheet is used to style the admin option form of the plugin. */
+.estachap_nav_div  li.page_item_has_children{
+	position: relative;
+	background: #FAFAFA; /**From sonymobile.com '*/
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 8px 10px;
+	color: #000;
+	line-height:24px;
+	font-size:12px;
+	text-align:left;
+	-webkit-font-smoothing: antialiased;
+	margin: 5px 5px;
+	transition:all 500ms ease;
+}

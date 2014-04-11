@@ -83,6 +83,8 @@ class SomcSubpagesEstachap {
 		// Load public-facing style sheet and JavaScript.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
@@ -108,6 +110,17 @@ class SomcSubpagesEstachap {
 		return $this->plugin_slug;
 	}
 
+	/**
+	 * Return the default image icon.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return    default image icon.
+	 */
+	public function get_default_icon() {
+		return $this->default_post_img;
+	}
+	
 	/**
 	 * Return an instance of this class.
 	 *
@@ -282,8 +295,7 @@ class SomcSubpagesEstachap {
 	 */
 	public function enqueue_styles() {
 		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
-		//wp_enqueue_style('jquery-ui-lightness-styles', get_template_directory_uri() . '/js/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.css', array());
-		wp_enqueue_style('jquery-ui-smoothness-styles', '//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css', array());
+
 	}
 
 	/**
@@ -293,8 +305,7 @@ class SomcSubpagesEstachap {
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
-		//wp_enqueue_script('jquery-ui', get_template_directory_uri() . '/js/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js', array(), '1.10.4');
-		wp_enqueue_script('jquery-ui', '//code.jquery.com/ui/1.10.4/jquery-ui.js', array(), '1.10.4');
+
 	}
 
 	/**
@@ -336,6 +347,7 @@ class SomcSubpagesEstachap {
 		//if the array $params is empty or not set then assign the data its default values
 		if(!isset($params) || empty($params)){
 			$p = array('id' => get_the_ID(), 'size' => 'thumbnail');
+			
 			$args = array(
 					'post_status' => 'publish',
 					'post_type' => 'page',
@@ -366,9 +378,7 @@ class SomcSubpagesEstachap {
 				$args = $params['args'];
 			}
 			
-		}
-		
-		
+		}		
 		
 		//apply any registered filter to the args data
 		$args = apply_filters('somc-subpages-estachap-shortcode-query', $args, $p);
@@ -386,6 +396,10 @@ class SomcSubpagesEstachap {
 		
 		$outputhtml = '';
 		$pages = get_posts($args);
+		//echo var_dump($pages);
+		//debug info
+		//echo count($pages);
+		
 		//if the current post has child pages then process the list recursively
 		if(!empty($pages)){
 			$outputhtml = "<div class='estachap-label'>";
@@ -395,7 +409,7 @@ class SomcSubpagesEstachap {
 			$outputhtml .= "</div>";
 
 			$outputhtml .= "<ul class='estachap estachap-container' id='subpages_of_{$post_array['id']}'>";
-			//track the deep of the recursion. In a future we want to check this in order to go too deep and slow down the page
+			//track the deep of the recursion. In a future we want to check this in order NOT to go too deep and slow down the page
 			self::$level++;
 			foreach ($pages as $post){
 				setup_postdata($post);
@@ -435,6 +449,29 @@ class SomcSubpagesEstachap {
 		}
 		
 		return apply_filters("somc-subpages-estachap-shortcode-output", $outputhtml);
+		
+	}
+	
+		public function display_pages_tree($page_id){
+		// use wp_list_pages to display parent and all child pages all generations (a tree with parent)
+		$parent = $page_id;
+		$args=array(
+				'child_of' => $parent
+		);
+		$pages = get_pages($args);
+		if ($pages) {
+			$pageids = array();
+			foreach ($pages as $page) {
+				$pageids[]= $page->ID;
+			}
+		
+			$args=array(
+					'title_li' => 'Tree of Parent Page ' . get_the_title($parent),
+					'include' =>  implode(",", $pageids),
+					'echo' => 0
+			);
+			return wp_list_pages($args);
+		}
 		
 	}
 

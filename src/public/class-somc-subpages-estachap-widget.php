@@ -58,12 +58,6 @@ class SomcSubpagesEstachapWidget extends \WP_Widget {
 	protected static $instance = null;
 	
 	/**
-	 * Used to track the deep of the subpages of the current page
-	 * @var int
-	 */
-	protected static $level = 0;
-	
-	/**
 	 * A default img html tag for the current post
 	 *
 	 * @var string
@@ -92,6 +86,7 @@ class SomcSubpagesEstachapWidget extends \WP_Widget {
 		);
 		
 		add_action('widgets_init', array($this, 'register_subpages_widget'));
+		//add_action( 'wp_dashboard_setup', array($this, 'dashboard_add_subpages_widgets' ));
 	
 	}
 	
@@ -184,6 +179,104 @@ class SomcSubpagesEstachapWidget extends \WP_Widget {
 	 */
 	public function register_subpages_widget(){
 		register_widget('SomcSubpagesEstachapWidget');
+		add_action( 'wp_dashboard_setup', array($this, 'dashboard_add_subpages_widgets' ));
+		
+	}
+	
+	public function dashboard_add_subpages_widgets(){
+
+		$widget_id = $this->id;
+		$widget_name = 'Pages list';
+		
+		wp_add_dashboard_widget($widget_id, $widget_name, array($this,'subpages_dashboard_widget_function'));
+		
+	}
+	
+	/**
+	 * Create the function to output the contents of our Dashboard Widget.
+	 */
+	function subpages_dashboard_widget_function($instance) {	
+
+		// Display all pages
+		//first select the top level pages
+		$top_pages = array();
+		$args = array(
+			'sort_order' => 'ASC',
+			'sort_column' => 'post_title',
+			'hierarchical' => 1,
+			'exclude' => '',
+			'include' => '',
+			'meta_key' => '',
+			'meta_value' => '',
+			'authors' => '',
+			'child_of' => 0,
+			'parent' => 0,
+			'exclude_tree' => '',
+			'number' => '',
+			'offset' => 0,
+			'post_type' => 'page',
+			'post_status' => 'publish'
+		); 
+		$top_pages = get_pages($args); 
+		
+		//display the subpages/children of every top level page
+		$output = "<div class='estachap_nav_div'><ul class='estachap'>";
+		
+		foreach($top_pages as $post){
+			//output a link to the current top page/post
+			setup_postdata($post);
+			$url = get_permalink($post->ID);
+			$img = get_the_post_thumbnail($post->ID, 'thumbnail');
+			$img = preg_replace('/(width)="\d*"\s/', 'width="50px"', $img);
+			$img = preg_replace('/(height)="\d*"\s/', 'height="50px"', $img);
+			if(empty($img))
+				$img = $this->plugin->get_default_icon();
+			//extract the first 20 chars from title text according the requirements
+			$title = substr($post->post_title, 0, 20);
+			$item = sprintf("<li li_value='%s'> %s <a href='%s'>%s</a>",$title, $img, $url, $title);
+			$output .= $item . '</br>';
+				
+			//add params to process the current post.
+			$p = array('id' => $post->ID, 'size' => 'thumbnail');
+			
+			$postargs = array(
+					'post_status' => 'publish',
+					'post_type' => 'page',
+					'post_parent' => $p['id'],
+					'orderby' => 'menu_order',
+					'order' => 'ASC',
+					'nopaging' => true,
+			);
+			$params = array("post_array" => $p, "args" => $postargs);		
+			
+			$output .= $this->plugin->shortcode($params);
+		}
+		
+		echo __( $output . '</ul></div>' , 'text_domain' );
+		
+	}
+	
+	/**
+	 * Gets all widget options, or only options for a specified widget if a widget id is provided.
+	 *
+	 * @param string $widget_id Optional. If provided, will only get options for that widget.
+	 * @return array An associative array
+	 */
+	public static function get_dashboard_widget_options( $widget_id='' )
+	{
+		//Fetch ALL dashboard widget options from the db...
+		$opts = get_option( 'dashboard_widget_options' );
+	
+		//If no widget is specified, return everything
+		if ( empty( $widget_id ) )
+			return $opts;
+	
+		//If we request a widget and it exists, return it
+		if ( isset( $opts[$widget_id] ) )
+			return $opts[$widget_id];
+	
+		//Something went wrong...
+		return false;
 	}
 			
 }
